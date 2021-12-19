@@ -126,7 +126,7 @@ Kubra Atalay Kabasakal, Hacettepe Üniversitesi, Eğitim Fakültesi, [Öğretim 
 
 
 ## Kodlar
-Eğitimin tum materyallerine [bura](https://github.com/atalay-k/veri_duzenleme.git) 
+Eğitimin tum materyallerine [bura](https://github.com/atalay-k/VM.git) 
 dan ulaşabilirsiniz.
 
 

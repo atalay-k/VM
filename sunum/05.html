@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>💪 4005 R ile Büyük Veri Analitiği</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="    👩‍🏫 Dr. Kübra ATALAY KABASAKAL   Hacettepe Üniversitesi" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/font-awesome/css/all.css" rel="stylesheet" />
+    <link href="libs/font-awesome/css/v4-shims.css" rel="stylesheet" />
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+    <link rel="stylesheet" href="slides-style.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# 💪 4005 R ile Büyük Veri Analitiği
+<<<<<<< HEAD
+## <br> 📈 Veri Manipulasyonu_05
+=======
+## <br> 💹 Veri Manipulasyonu_05
+>>>>>>> a770ffe07f1fa6836f04e8bda7ac33163d935467
+### <br> <br> 👩‍🏫 Dr. Kübra ATALAY KABASAKAL <br> Hacettepe Üniversitesi
+### 20/12/2021 <br> <br> <br> <br>📧 <a href="mailto:katalay@hacettepe.edu.tr" class="email">katalay@hacettepe.edu.tr</a>
+
+---
+
+
+
+
+
+layout: true
+  
+&lt;div class="my-footer"&gt;
+&lt;span&gt;
+ - Dr. Kübra Atalay Kabasakal
+&lt;/span&gt;
+&lt;/div&gt; 
+
+---
+
+
+
+
+
+
+# Veri Formatı Degiştirme .huge[📊]
+
+.hand[İçerik...]
+- **tiydr** paketi
+- **gather()** fonksiyonu
+- **separete()** fonksiyonu
+- **spread()** fonksiyonu
+- **unite()** fonksiyonu 
+
+
+---
+## Veriyi İnceleme
+
+- Bir veriyi R ortamamına aktardıktan sonra
+
+  - Veri setinizde yer alan tüm satırlar/sütunlar doğru bir şekilde aktarılmış mı?
+  
+  - Sütun isimleri düzgün mü? 
+  
+  - Özellikle sütun adlarında boşluk olması ya da farklı      karakterler bulunması sıkıntı yaratabilir.
+
+---
+## Veriyi İnceleme
+
+- Aktarılan boş satır ve sütunlar var mı?
+
+  - **filter()** ve **select()** gibi fonksiyonlarla            incelebilir. 
+   
+- Eksik veriler nasıl temsil ediliyor?
+
+  - **NA**,**" "** (bosluk), **.**, **999** ,  **9999**
+  
+  - eksik veriler **mutate()** ve **ifelse()** ile             düzenlebilir.
+  
+- character ve factor değişkenler düzgün tanımlanımış mı?
+  
+---
+.center[## Dağınık Veri]
+
+.pull-left-narrow[
+  
+    
+| **Program**     | **Kadın** | **Erkek**|
+|-----------------|----------:|---------:|
+| Olcme           |      6    |    6     |
+| Program         |      5    |    5     |
+| Yonetim         |      7    |    8     |
+| PDR             |      5    |    3     |
+
+]
+.pull-right-wide[
+- Gözlem nedir?
+  - Her bir programda yer alan öğrencilerin cinsiyeti
+- Değişkenler nelerdir?
+  - Program, Cinsiyet, Frekans
+- Değerler nelerdir?
+    + Program: Olcme, Program, Yonetim, PDR
+    + Cinsiyet: Kadın, Erkek 
+- Bunların degisken değeri olması gerekiyor, sutun baslığı değil!
+    + Frekans: ***Frekanslar iki sütuna dağılmış !!!**
+]
+---
+## Düzgün Veri
+
+
+| **Program**     | **Cinsiyet** | **Frekans** |
+|-----------------|-------------:|------------:|
+| Olcme           |     Kadın    |    6        |
+| Olcme           |     Erkek    |    6        |
+| Program         |     Kadın    |    5        |
+| Program         |     Erkek    |    5        |
+| Yonetim         |     Kadın    |    7        |
+| Yonetim         |     Erkek    |    8        |
+| PDR             |     Kadın    |    5        |
+| PDR             |     Erkek    |    3        |
+
+--
+- Değişkenler sütunda
+
+--
+
+- Gözlemler Satırlarda olmalıdır !
+--
+
+---
+## Düzgün Veri
+
+- Çok sayıda **satırı** anlamlandırmak, çok sayıda **sütunu** anlamlandırmaktan daha kolaydır.
+
+- **ggplot2**,**plotly**,**lattice** gibi paketleri rahat kullanabilmek için düzenli veri gereklidir.
+
+- hiyerarşik ve karma modeller için de verinin düzgün olması önemlidir.
+
+- Değişken adları mümkün olduğunca anlamlı olmalıdır.
+
+- Eksik değerler ve **dengesiz** tekrarlanan ölçüm verileriyle ilgili daha az sorun sağlar.
+
+---
+## Düzgün Veri
+
+- **tidyr** paketi **reshape** paketi gibi veri düzenlemede kullanılabilir.
+
+- **gather()**: bir dizi sütun alır ve onları iki yeni sütuna (kendi adını verebileceğin) dönüştürür.
+
+  - A key:  Orijinal sütun adlarını saklayan bir anahtar
+  - A value: Bu orijinal sütunlardaki değerlere sahip bir değer.
+  
+---
+## **gather()** fonksiyonu
+
+- Fonksiyonun kullanım şekli
+
+```r
+gather(data, key, value, ..., na.rm = FALSE, 
+       convert = FALSE, factor_key = FALSE)
+```
+
+- Fonksiyonun kullanımı göstermek için veri seti oluşturma
+
+
+```r
+n=20
+genisveri &lt;- data.frame(
+  ID = paste("ID",101:120,sep=""),
+  Sure_1 = sample(50:60,20,replace=TRUE),
+  Sure_2 = sample(40:55,20,replace=TRUE),
+  Sure_3 = sample(35:50,20,replace=TRUE)
+)
+```
+
+
+---
+## **gather()** fonksiyonu
+
+
+```r
+genisveri
+```
+
+```
+##       ID Sure_1 Sure_2 Sure_3
+## 1  ID101     59     42     38
+## 2  ID102     55     43     42
+## 3  ID103     54     54     50
+## 4  ID104     58     54     44
+## 5  ID105     54     52     45
+## 6  ID106     55     49     36
+## 7  ID107     53     44     39
+## 8  ID108     51     41     49
+## 9  ID109     56     53     40
+## 10 ID110     55     54     35
+## 11 ID111     59     47     40
+## 12 ID112     55     50     42
+## 13 ID113     53     43     37
+## 14 ID114     57     55     40
+## 15 ID115     53     51     35
+## 16 ID116     53     42     47
+## 17 ID117     54     46     50
+## 18 ID118     57     48     35
+## 19 ID119     53     42     43
+## 20 ID120     57     45     42
+```
+
+---
+## **gather()** 
+
+- gather() fonksiyonu geniş veriyi, uzun veri haline getirir.
+
+
+```r
+uzun &lt;- genisveri %&gt;% gather(Sure, Zaman, Sure_1:Sure_3)
+```
+
+- Olusan veride Sure_1,Sure_2 ve Sure_3, Sure değişkenin değerleri haline geldi.
+
+---
+## **gather()** 
+
+
+```r
+uzun %&gt;% head(3)
+```
+
+```
+##      ID   Sure Zaman
+## 1 ID101 Sure_1    59
+## 2 ID102 Sure_1    55
+## 3 ID103 Sure_1    54
+```
+
+```r
+uzun %&gt;% tail(3)
+```
+
+```
+##       ID   Sure Zaman
+## 58 ID118 Sure_3    35
+## 59 ID119 Sure_3    43
+## 60 ID120 Sure_3    42
+```
+
+
+- Gördüğünüz gibi, şimdi iki sütunumuz var: Biri *Sure* için, diğeri **Zaman** için. Her katılımcı icin üc farkli süre degeri olduğu için her bir ID değeri üç kere tekrarlamaktadır.
+
+---
+## **separate()**
+
+- **separate()** bir sütunu birden çok sütuna ayırır.
+
+- değerlerin sütun adlarına gömüldüğü toplanmış verilerde ortaktır.
+
+- Olusan veride Sure_1,Sure_2 ve Sure_3 değerlerinin karakter ve sayısal değerlerini ayırmak için **separate():** fonkisyonu kullanabilirsiniz.
+
+
+
+```r
+uzun_ayrı &lt;- uzun %&gt;% 
+            separate(Sure, c("Sure","Sayı"),"_") 
+
+uzun_ayrı %&gt;% head(3)
+```
+
+```
+##      ID Sure Sayı Zaman
+## 1 ID101 Sure    1    59
+## 2 ID102 Sure    1    55
+## 3 ID103 Sure    1    54
+```
+
+---
+## **unite()** fonksiyonu
+
+- **gather*()** fonksiyonun tam tersi olarak iki sütunu alıp
+tek sutunda birlestirir.
+
+
+```r
+uzun_birles &lt;- uzun_ayrı %&gt;% unite(SURE, Sure, Sayı, sep = ".")
+uzun_birles %&gt;% head(3)
+```
+
+```
+##      ID   SURE Zaman
+## 1 ID101 Sure.1    59
+## 2 ID102 Sure.1    55
+## 3 ID103 Sure.1    54
+```
+
+---
+## **spread()** fonksiyonu
+
+- **spread():**  **gather*()** fonksiyonun tam tersini yaparak uzun veriden genis veri olusturmaya yarar.
+
+
+```r
+tekrar_genis &lt;- uzun_birles %&gt;% spread(SURE, Zaman)
+tekrar_genis
+```
+
+```
+##       ID Sure.1 Sure.2 Sure.3
+## 1  ID101     59     42     38
+## 2  ID102     55     43     42
+## 3  ID103     54     54     50
+## 4  ID104     58     54     44
+## 5  ID105     54     52     45
+## 6  ID106     55     49     36
+## 7  ID107     53     44     39
+## 8  ID108     51     41     49
+## 9  ID109     56     53     40
+## 10 ID110     55     54     35
+## 11 ID111     59     47     40
+## 12 ID112     55     50     42
+## 13 ID113     53     43     37
+## 14 ID114     57     55     40
+## 15 ID115     53     51     35
+## 16 ID116     53     42     47
+## 17 ID117     54     46     50
+## 18 ID118     57     48     35
+## 19 ID119     53     42     43
+## 20 ID120     57     45     42
+```
+
+
+---
+
+&lt;br&gt;
+
+.hand-large[teşekkürler !]
+
+--
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "solarized-light",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9",
+"slideNumberFormat": "<div class=\"progress-bar-container\">\n  <div class=\"progress-bar\" style=\"width: calc(%current% / %total% * 100%);\">\n  </div>\n</div>"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

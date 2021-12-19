@@ -1,0 +1,3 @@
+## Rstudio Cloud
+
+RStudio Cloud, tarayıcıda çevrimiçi R öğretmek için hafif ve kurulumu/kullanımı kolay bir çözümdür. Bu web seminerinde, öğretmenler ve öğrenciler için çeşitli işlevleri vurgulayarak kursunuzu RStudio Cloud üzerinde kurma adımlarında size yol göstereceğiz. Ayrıca en iyi uygulamaları tartışacağız ve öğrenci ve eğitmen perspektifinden RStudio Cloud ile etkileşim için fırsatlar sunacağız.

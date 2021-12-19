@@ -1,0 +1,219 @@
+---
+title: "`r emo::ji('muscle')` 4005 R ile Büyük Veri Analitiği"
+subtitle: " <br> `r emo::ji('graph')` Veri Manipulasyonu_06"
+author: "<br> <br> `r emo::ji('woman_teacher')` Dr. Kübra ATALAY KABASAKAL <br> Hacettepe Üniversitesi"
+date: "20/12/2021 <br> <br> <br> <br>`r emo::ji('e-mail')` katalay@hacettepe.edu.tr"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: ["xaringan-themer.css", "slides-style.css"]
+    nature:
+      highlightStyle: solarized-light
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: "16:9"
+      slideNumberFormat: |
+        <div class="progress-bar-container">
+          <div class="progress-bar" style="width: calc(%current% / %total% * 100%);">
+          </div>
+        </div>
+---
+
+```{r child = "../setup.Rmd"}
+```
+
+```{r set-theme, include=FALSE}
+library(xaringanthemer)
+style_duo_accent(
+  primary_color      = "#0F4C81", # pantone classic blue
+  secondary_color    = "#B6CADA", # pantone baby blue
+  header_font_google = google_font("Raleway"),
+  text_font_google   = google_font("Raleway", "300", "300i"),
+  code_font_google   = google_font("Source Code Pro"),
+  text_font_size     = "30px"
+)
+```
+
+
+```{r load-packages, include=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(dplyr)
+library(tidyr)
+
+library(tuev)
+
+
+```
+
+
+---
+## Veriyi İnceleme
+
+Oncelikle **select()** fonksiyonunu ile kullanmak üzere bir veri seti oluşturalim.
+
+```{r}
+miniPISA <-  PISA_OGR_2018 %>%   select(OGRENCIID,
+                           OKUL_TUR,
+                           CINSIYET,SES,Gocmenlik,
+                           Anne_Egitim,Baba_Egitim,
+                           OKUMA_ZEVK,OK_YETERLIK,ODOKUMA1)  %>%
+                           expss::drop_var_labs()
+```
+
+---
+## Veriyi İnceleme
+
+`"miniPISA"` nesnesinden sosyoekonomik düzeyi 3'un üstünde olan gözlemlerin seçilmesi
+
+```{r include=FALSE}
+      filter(miniPISA, SES >3)
+
+```
+
+---
+## Veriyi İnceleme
+
+`"miniPISA"` nesnesinden sosyoekonomik düzeyi 2'in üstünde olan gözlemlerin seçilmesi
+
+```{r include=FALSE}
+      filter(miniPISA, SES >2)
+
+```
+
+---
+## Veriyi İnceleme
+
+`"miniPISA"` nesnesinden anne eğitim düzeyi, baba eğitim düzeyinden yüksek olanların secilmesi
+
+```{r include=FALSE}
+filter(miniPISA,  Anne_Egitim > Baba_Egitim)
+
+```
+
+---
+## Veriyi İnceleme
+
+`"miniPISA"` nesnesinden anne eğitim düzeyi, baba eğitim düzeyinden yüksek olanların ve OK_YETERLIK değişkeninde eksik verisi olmayanların seçilmesi
+
+- eksik veri varlığı **is.na()** fonksiyonu ile incelenebilir.
+
+```{r}
+x <- c(3,5,6,7,8,NA)
+is.na(x)
+
+```
+
+
+```{r include=FALSE}
+filter(miniPISA, Anne_Egitim > Baba_Egitim, !is.na(OK_YETERLIK ))
+```
+
+---
+## Veriyi İnceleme
+
+`"miniPISA"` nesnesinden anne eğitim düzeyi, baba eğitim düzeyinden yüksek olanların ve OK_YETERLIK değişkeninde eksik verisi olmayanların ve sosyoekonomik düzeyi ortalamanın üstünde olanların seçilmesi
+
+```{r include=FALSE}
+filter(miniPISA, Anne_Egitim > Baba_Egitim, !is.na(OK_YETERLIK ), SES >0)
+```
+
+---
+## Veriyi İnceleme
+
+`"miniPISA"` nesnesindeki gözlemlerin SES puanlarına göre büyükten küçüğe sıralanması
+
+```{r include=FALSE}
+# - operetoru
+arrange(miniPISA, -SES)
+```
+
+```{r include=FALSE}
+# desc()  fonksiyonu
+arrange(miniPISA, desc(SES))
+```
+
+---
+## Veriyi İnceleme
+
+`"miniPISA"` nesnesindeki gözlemlerin anne eğitim düzeyi ve baba eğitim düzeyi toplamına gore  büyükten küçüğe sıralanması
+
+```{r}
+arrange(miniPISA,Anne_Egitim + Baba_Egitim)
+
+```
+
+
+---
+## Veriyi İnceleme
+
+`"miniPISA"` nesnesindeki gözlemlerin "OK_YETERLIK" puanlarina iliskin ozet istatistiklerin elde edilmesi
+
+```{r include=FALSE}
+summarise(miniPISA, n(),mean(OK_YETERLIK)) #eksik veri
+```
+
+---
+## Veriyi İnceleme
+
+`"miniPISA"` nesnesindeki gözlemlerin eksik gözlemler çikarildiktan sonra sayısal sütunlara ilişkin ozet istatistikler
+
+```{r include=FALSE}
+miniPISA %>% 
+    filter(complete.cases(.))  %>%  #eksik veri cikarilir
+  summarise(across(where(is.numeric),mean))
+```
+
+ayni islemi `is.na()` fonksiyonunu kullanarak siz de deneyiniz.
+
+---
+## Veriyi İnceleme
+
+`"miniPISA"` nesnesinde anne ve baba egitim düzeyin lise ve uzeri olan ve sosyo ekonomik düzeyi ortalamanin uzerinde olan öğrencilerin OK_YETERLIK puanlarina iliskin ozet istatistikler
+
+```{r include=FALSE}
+miniPISA %>% 
+            filter(complete.cases(.))%>% 
+            select(Anne_Egitim,Baba_Egitim,SES,OK_YETERLIK) %>% 
+            filter(Anne_Egitim  >=4 & Baba_Egitim  >=4 & SES >1) %>% 
+            summarise (N= n(),min  = min(OK_YETERLIK) ,
+            max = max  (OK_YETERLIK) ,
+            ort = mean(OK_YETERLIK) ,sd = sd(OK_YETERLIK))
+```
+
+---
+## Veriyi İnceleme
+
+`"miniPISA"` nesnesinde anne egitim düzeyinde eksik verisi olmayan öğrencilerin anne egitim düzeyine gore OK_YETERLIK puanlarinin buyukten kucuge siralanmasi
+
+```{r include=FALSE}
+ miniPISA %>% 
+  filter(!is.na(Anne_Egitim)) %>% 
+  group_by(Anne_Egitim) %>% 
+  summarise(N=n(), ort=mean(OK_YETERLIK,na.rm=TRUE)) %>% 
+  arrange(-ort)
+
+```
+
+---
+## Veriyi İnceleme
+
+`"miniPISA"` nesnesinde 2. nesil gocmen öğrencilerin cinsiyete gore basari puanlarinin ortalamasinin hesaplanmasi
+
+```{r include=FALSE}
+miniPISA %>% filter(Gocmenlik==2) %>% 
+  group_by(CINSIYET) %>% 
+  summarise(n=n(),ort=mean(ODOKUMA1))
+```
+
+## Baska Ornekler Icin
+
+
+[tuev paket] (https://rpubs.com/tuevpaket/775269)
+
+---
+
+.hand-large[teşekkürler !]
+
+
+
+

@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>💪 4005 R ile Büyük Veri Analitiği</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="    👩‍🏫 Dr. Kübra ATALAY KABASAKAL   Hacettepe Üniversitesi" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/font-awesome/css/all.css" rel="stylesheet" />
+    <link href="libs/font-awesome/css/v4-shims.css" rel="stylesheet" />
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+    <link rel="stylesheet" href="slides-style.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# 💪 4005 R ile Büyük Veri Analitiği
+## <br> 📈 Veri Manipulasyonu_03
+### <br> <br> 👩‍🏫 Dr. Kübra ATALAY KABASAKAL <br> Hacettepe Üniversitesi
+### 20/12/2021 <br> <br> <br> <br>📧 <a href="mailto:katalay@hacettepe.edu.tr" class="email">katalay@hacettepe.edu.tr</a>
+
+---
+
+
+
+
+
+layout: true
+  
+&lt;div class="my-footer"&gt;
+&lt;span&gt;
+ - Dr. Kübra Atalay Kabasakal
+&lt;/span&gt;
+&lt;/div&gt; 
+
+---
+
+
+
+
+
+
+# Seçme ve Dönüştürme .huge[📊]
+
+.hand[İçerik...]
+- **select()** fonksiyonu
+
+--
+
+- **select()** fonksiyonu içinde çalışan fonksiyonlar
+--
+
+- **rename()** fonksiyonu
+
+--
+
+- **mutate()** ve **transmute()** fonksiyonları
+
+
+---
+## select() fonksiyonu
+
+- **select()** fonksiyonu ile sütun bazında seçim yapılabilir.
+
+- Veri yapısının incelenmesi
+
+
+```r
+dim(PISA_OGR_2018)
+```
+
+```
+## [1] 6890  673
+```
+
+- 673 sütunla çalişmayacaksanız, problem durumunuza uygun sütunları seçebilirsiniz. Fonksiyon içinde degişkenler tek tek virgül `,` ile ayrılarak seçim yapılabilir.
+
+``` {.r}
+select(veri seti, degisken adi, degisken adi,..)
+veri seti %&gt;% select(degisken adi, degisken adi,..)
+
+```
+
+---
+## select() fonksiyonu
+
+- OKULID, OGRENCIID, CINSIYET ,SES değikenlerinin seçimi
+
+
+```r
+select(PISA_OGR_2018, OKULID, OGRENCIID, CINSIYET ,SES) %&gt;% head(3)
+```
+
+```
+## # A tibble: 3 x 4
+##     OKULID OGRENCIID  CINSIYET   SES
+##      &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl+lbl&gt; &lt;dbl&gt;
+## 1 79200001  79200768 2 [Erkek] -2.45
+## 2 79200001  79201064 2 [Erkek] -2.10
+## 3 79200001  79201118 1 [Kiz]   -2.27
+```
+
+Aynı işlem `c()` fonksiyonu içinde de yapılabilir.
+
+
+```r
+select(PISA_OGR_2018, c(OKULID, OGRENCIID, CINSIYET ,SES))
+```
+
+---
+## select() fonksiyonu
+
+- **select()** fonksiyonu ile sütun bazında seçim yapılabilir.
+
+
+```r
+PISA_OGR_2018 %&gt;% select(OKULID, OGRENCIID, CINSIYET ,SES)
+```
+
+```
+## # A tibble: 6,890 x 4
+##      OKULID OGRENCIID  CINSIYET     SES
+##       &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl+lbl&gt;   &lt;dbl&gt;
+##  1 79200001  79200768 2 [Erkek] -2.45  
+##  2 79200001  79201064 2 [Erkek] -2.10  
+##  3 79200001  79201118 1 [Kiz]   -2.27  
+##  4 79200001  79201275 2 [Erkek]  0.0324
+##  5 79200001  79201481 2 [Erkek] -0.0674
+##  6 79200001  79201556 2 [Erkek]  0.398 
+##  7 79200001  79201652 1 [Kiz]   -0.866 
+##  8 79200001  79202033 2 [Erkek] -0.158 
+##  9 79200001  79202179 1 [Kiz]   -0.626 
+## 10 79200001  79202278 2 [Erkek] -2.28  
+## # ... with 6,880 more rows
+```
+
+---
+## select() fonksiyonu  **:**
+
+- **select()** fonksiyonu belirli bir aralıktaki değişkenler iki nokta `:` opertorü ile seçilebilir. 
+
+- örnegin okumadan alınan zevke ilişkin maddeler aşağıdaki şekilde seçilebilir.
+
+
+```r
+PISA_OGR_2018 %&gt;% select(ST097Q01TA:ST097Q05TA)
+```
+
+```
+## # A tibble: 6,890 x 5
+##                  ST097Q01TA    ST097Q02TA   ST097Q03TA   ST097Q04TA   ST097Q05TA
+##                   &lt;dbl+lbl&gt;     &lt;dbl+lbl&gt;    &lt;dbl+lbl&gt;    &lt;dbl+lbl&gt;    &lt;dbl+lbl&gt;
+##  1 1 [Her ders]              2 [Dersleri~ 1 [Her ders] 1 [Her ders] 1 [Her ders]
+##  2 3 [cogunlukla test dili]  2 [Dersleri~ 3 [cogunluk~ 3 [cogunluk~ 3 [cogunluk~
+##  3 2 [Derslerin cogunda]     3 [cogunluk~ 3 [cogunluk~ 3 [cogunluk~ 3 [cogunluk~
+##  4 2 [Derslerin cogunda]     2 [Dersleri~ 3 [cogunluk~ 1 [Her ders] 1 [Her ders]
+##  5 3 [cogunlukla test dili]  3 [cogunluk~ 4 [Bazi der~ 3 [cogunluk~ 1 [Her ders]
+##  6 3 [cogunlukla test dili]  3 [cogunluk~ 2 [Dersleri~ 2 [Dersleri~ 3 [cogunluk~
+##  7 3 [cogunlukla test dili] NA            3 [cogunluk~ 3 [cogunluk~ 4 [Bazi der~
+##  8 3 [cogunlukla test dili]  3 [cogunluk~ 2 [Dersleri~ 1 [Her ders] 2 [Dersleri~
+##  9 3 [cogunlukla test dili]  4 [Bazi der~ 3 [cogunluk~ 4 [Bazi der~ 3 [cogunluk~
+## 10 3 [cogunlukla test dili]  4 [Bazi der~ 2 [Dersleri~ 1 [Her ders] 1 [Her ders]
+## # ... with 6,880 more rows
+```
+
+---
+## select() fonksiyonu   **-**
+
+- **select()**  fonksiyonu belirli bir aralıkta yer alan değişkenler iki nokta **:** opertorü ile seçilirken, bu aralıkta dahil edilmek istenmeyen degişkenler kisa cizgi **-** operatorü ile hariç tutulabilir.
+
+
+```r
+PISA_OGR_2018 %&gt;% select(OKULID:SINIF,-KITAPCIK) %&gt;% head(5)
+```
+
+```
+## # A tibble: 5 x 4
+##     OKULID OGRENCIID OKUL_TUR                             SINIF
+##      &lt;dbl&gt;     &lt;dbl&gt; &lt;chr+lbl&gt;                        &lt;dbl+lbl&gt;
+## 1 79200001  79200768 TUR0112 [Anadolu Lisesi - E] 10 [SINIF 10]
+## 2 79200001  79201064 TUR0112 [Anadolu Lisesi - E] 10 [SINIF 10]
+## 3 79200001  79201118 TUR0112 [Anadolu Lisesi - E] 10 [SINIF 10]
+## 4 79200001  79201275 TUR0112 [Anadolu Lisesi - E]  9 [SINIF 9] 
+## 5 79200001  79201481 TUR0112 [Anadolu Lisesi - E]  9 [SINIF 9]
+```
+
+---
+## **starts_with()**
+
+- Sadece **select()** fonksiyonu içinde çalışan birtakım fonksiyonlar değişken seçim işini kolaylaştırır.
+
+- **ST097** ile başlayan degişkenlerin seçilmesi
+
+
+```r
+select(PISA_OGR_2018, starts_with("ST097")) %&gt;% head(5)
+```
+
+```
+## # A tibble: 5 x 5
+##                 ST097Q01TA    ST097Q02TA    ST097Q03TA   ST097Q04TA   ST097Q05TA
+##                  &lt;dbl+lbl&gt;     &lt;dbl+lbl&gt;     &lt;dbl+lbl&gt;    &lt;dbl+lbl&gt;    &lt;dbl+lbl&gt;
+## 1 1 [Her ders]             2 [Derslerin~ 1 [Her ders]  1 [Her ders] 1 [Her ders]
+## 2 3 [cogunlukla test dili] 2 [Derslerin~ 3 [cogunlukl~ 3 [cogunluk~ 3 [cogunluk~
+## 3 2 [Derslerin cogunda]    3 [cogunlukl~ 3 [cogunlukl~ 3 [cogunluk~ 3 [cogunluk~
+## 4 2 [Derslerin cogunda]    2 [Derslerin~ 3 [cogunlukl~ 1 [Her ders] 1 [Her ders]
+## 5 3 [cogunlukla test dili] 3 [cogunlukl~ 4 [Bazi ders~ 3 [cogunluk~ 1 [Her ders]
+```
+
+---
+## **ends_with()**
+
+- **NA** ile **biten** degişkenlerin seçilmesi
+
+
+```r
+select(PISA_OGR_2018, ends_with("NA"))  %&gt;% head(5)
+```
+
+```
+## # A tibble: 5 x 48
+##    ST104Q02NA  ST104Q03NA ST104Q04NA ST016Q01NA ST123Q02NA ST123Q03NA ST123Q04NA
+##     &lt;dbl+lbl&gt;   &lt;dbl+lbl&gt;  &lt;dbl+lbl&gt;      &lt;dbl&gt;  &lt;dbl+lbl&gt;  &lt;dbl+lbl&gt;  &lt;dbl+lbl&gt;
+## 1 2 [Bazi de~ 2 [Bazi de~ 2 [Bazi d~         NA 4 [Kesinl~  4 [Kesin~ 4 [Kesinl~
+## 2 2 [Bazi de~ 2 [Bazi de~ 3 [Dersle~          7 4 [Kesinl~  3 [Katil~ 1 [Kesinl~
+## 3 2 [Bazi de~ 2 [Bazi de~ 2 [Bazi d~          4 3 [Katili~  3 [Katil~ 3 [Katili~
+## 4 3 [Dersler~ 2 [Bazi de~ 3 [Dersle~          3 3 [Katili~ NA         3 [Katili~
+## 5 3 [Dersler~ 2 [Bazi de~ 4 [Her de~          1 1 [Kesinl~  1 [Kesin~ 1 [Kesinl~
+## # ... with 41 more variables: ST060Q01NA &lt;dbl&gt;, ST061Q01NA &lt;dbl&gt;,
+## #   ST038Q03NA &lt;dbl+lbl&gt;, ST038Q04NA &lt;dbl+lbl&gt;, ST038Q05NA &lt;dbl+lbl&gt;,
+## #   ST038Q06NA &lt;dbl+lbl&gt;, ST038Q07NA &lt;dbl+lbl&gt;, ST038Q08NA &lt;dbl+lbl&gt;,
+## #   IC009Q05NA &lt;dbl+lbl&gt;, IC009Q06NA &lt;dbl+lbl&gt;, IC009Q07NA &lt;dbl+lbl&gt;,
+## #   IC009Q10NA &lt;dbl+lbl&gt;, IC009Q11NA &lt;dbl+lbl&gt;, IC008Q07NA &lt;dbl+lbl&gt;,
+## #   IC008Q13NA &lt;dbl+lbl&gt;, IC010Q02NA &lt;dbl+lbl&gt;, IC010Q05NA &lt;dbl+lbl&gt;,
+## #   IC010Q06NA &lt;dbl+lbl&gt;, IC010Q09NA &lt;dbl+lbl&gt;, IC010Q10NA &lt;dbl+lbl&gt;, ...
+```
+
+---
+## **contains()**
+
+- **OKUMA** geçen değişkenlerin seçilmesi
+
+
+```r
+select(PISA_OGR_2018,contains("OKUMA"))
+```
+
+```
+## # A tibble: 6,890 x 12
+##    OKUMA_BAGLILIGI OKUMA_ZEVK ODOKUMA1 ODOKUMA2 ODOKUMA3 ODOKUMA4 ODOKUMA5
+##              &lt;dbl&gt;      &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+##  1         -0.922     -0.289      376.     418.     421.     414.     434.
+##  2          1.07       0.604      512.     473.     564.     485.     500.
+##  3         -0.62       0.638      396.     414.     423.     452.     392.
+##  4         -0.62      -1.15       393.     429.     365.     383.     379.
+##  5          0.378      0.667      552.     570.     563.     531.     532.
+##  6         -0.62       0.357      441.     416.     407.     437.     473.
+##  7          0.646     -0.0886     411.     422.     426.     385.     461.
+##  8         -0.0104     0.931      551.     552.     509.     491.     538.
+##  9         -0.234      1.22       542.     534.     501.     523.     497.
+## 10          0.759      0.425      434.     470.     538.     495.     502.
+## # ... with 6,880 more rows, and 5 more variables: ODOKUMA6 &lt;dbl&gt;,
+## #   ODOKUMA7 &lt;dbl&gt;, ODOKUMA8 &lt;dbl&gt;, ODOKUMA9 &lt;dbl&gt;, ODOKUMA10 &lt;dbl&gt;
+```
+
+---
+##  **matches()**
+
+- içinde **02** geçen değişkenlerin seçilmesi
+
+
+```r
+select(PISA_OGR_2018,matches("02"))  %&gt;% head(5)
+```
+
+```
+## # A tibble: 5 x 59
+##    ST097Q02TA  ST100Q02TA ST102Q01TA ST102Q02TA ST102Q03TA ST102Q04TA ST211Q02HA
+##     &lt;dbl+lbl&gt;   &lt;dbl+lbl&gt;  &lt;dbl+lbl&gt;  &lt;dbl+lbl&gt;  &lt;dbl+lbl&gt;  &lt;dbl+lbl&gt;  &lt;dbl+lbl&gt;
+## 1 2 [Dersler~ 2 [Dersler~ 2 [Dersle~ 2 [Dersle~ 3 [cogunl~ 2 [Dersle~ 3 [Katili~
+## 2 2 [Dersler~ 3 [cogunlu~ 2 [Dersle~ 3 [cogunl~ 2 [Dersle~ 2 [Dersle~ 2 [Katilm~
+## 3 3 [cogunlu~ 2 [Dersler~ 2 [Dersle~ 2 [Dersle~ 3 [cogunl~ 3 [cogunl~ 2 [Katilm~
+## 4 2 [Dersler~ 2 [Dersler~ 2 [Dersle~ 3 [cogunl~ 4 [Bazi d~ 3 [cogunl~ 2 [Katilm~
+## 5 3 [cogunlu~ 3 [cogunlu~ 3 [cogunl~ 1 [Her de~ 2 [Dersle~ 2 [Dersle~ 2 [Katilm~
+## # ... with 52 more variables: ST212Q02HA &lt;dbl+lbl&gt;, ST104Q02NA &lt;dbl+lbl&gt;,
+## #   ST213Q02HA &lt;dbl+lbl&gt;, ST150Q02IA &lt;dbl+lbl&gt;, ST153Q02HA &lt;dbl+lbl&gt;,
+## #   ST158Q02HA &lt;dbl+lbl&gt;, ST160Q02IA &lt;dbl+lbl&gt;, ST167Q02IA &lt;dbl+lbl&gt;,
+## #   ST176Q02IA &lt;dbl+lbl&gt;, ST161Q02HA &lt;dbl+lbl&gt;, ST163Q02HA &lt;dbl+lbl&gt;,
+## #   ST164Q02IA &lt;dbl+lbl&gt;, ST165Q02IA &lt;dbl+lbl&gt;, ST166Q02HA &lt;dbl+lbl&gt;,
+## #   ST225Q02HA &lt;dbl+lbl&gt;, ST181Q02HA &lt;dbl+lbl&gt;, ST183Q02HA &lt;dbl+lbl&gt;,
+## #   ST185Q02HA &lt;dbl+lbl&gt;, ST186Q02HA &lt;dbl+lbl&gt;, ST208Q02HA &lt;dbl+lbl&gt;, ...
+```
+
+---
+## **num_range()**
+
+-  ardışık ilerleyen değişkenlerin seçilmesi
+
+
+```r
+select(PISA_OGR_2018,num_range("AGIRLIKLANDIRMA",1:5))  %&gt;% head(5)
+```
+
+```
+## # A tibble: 5 x 5
+##   AGIRLIKLANDIRMA1 AGIRLIKLANDIRMA2 AGIRLIKLANDIRMA3 AGIRLIKLANDIRMA4
+##              &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;
+## 1             71.0             213.             71.0             213.
+## 2             71.0             213.             71.0             213.
+## 3             71.0             213.             71.0             213.
+## 4             71.0             213.             71.0             213.
+## 5             71.0             213.             71.0             213.
+## # ... with 1 more variable: AGIRLIKLANDIRMA5 &lt;dbl&gt;
+```
+
+---
+##  Matıksal operatorler ile seçim
+
+- farklı fonksiyonları aynı anda mantıksal operatörlerle kullanarak da seçim yapabilirsiniz.
+
+- veya **|** operatorünün kullanılması
+
+
+```r
+select(PISA_OGR_2018,contains("OKUMA") | matches("2"))  %&gt;% head(5)
+```
+
+```
+## # A tibble: 5 x 198
+##   OKUMA_BAGLILIGI OKUMA_ZEVK ODOKUMA1 ODOKUMA2 ODOKUMA3 ODOKUMA4 ODOKUMA5
+##             &lt;dbl&gt;      &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+## 1          -0.922     -0.289     376.     418.     421.     414.     434.
+## 2           1.07       0.604     512.     473.     564.     485.     500.
+## 3          -0.62       0.638     396.     414.     423.     452.     392.
+## 4          -0.62      -1.15      393.     429.     365.     383.     379.
+## 5           0.378      0.667     552.     570.     563.     531.     532.
+## # ... with 191 more variables: ODOKUMA6 &lt;dbl&gt;, ODOKUMA7 &lt;dbl&gt;, ODOKUMA8 &lt;dbl&gt;,
+## #   ODOKUMA9 &lt;dbl&gt;, ODOKUMA10 &lt;dbl&gt;, ST097Q02TA &lt;dbl+lbl&gt;,
+## #   ST100Q02TA &lt;dbl+lbl&gt;, ST102Q01TA &lt;dbl+lbl&gt;, ST102Q02TA &lt;dbl+lbl&gt;,
+## #   ST102Q03TA &lt;dbl+lbl&gt;, ST102Q04TA &lt;dbl+lbl&gt;, ST211Q01HA &lt;dbl+lbl&gt;,
+## #   ST211Q02HA &lt;dbl+lbl&gt;, ST211Q03HA &lt;dbl+lbl&gt;, ST212Q01HA &lt;dbl+lbl&gt;,
+## #   ST212Q02HA &lt;dbl+lbl&gt;, ST212Q03HA &lt;dbl+lbl&gt;, ST104Q02NA &lt;dbl+lbl&gt;,
+## #   ST213Q01HA &lt;dbl+lbl&gt;, ST213Q02HA &lt;dbl+lbl&gt;, ST213Q03HA &lt;dbl+lbl&gt;, ...
+```
+
+---
+##  Matıksal operatorler ile seçim
+
+- ve **&amp;** operatorunun kullanılması
+
+
+```r
+select(PISA_OGR_2018,contains("OKUMA") &amp; matches("2"))
+```
+
+```
+## # A tibble: 6,890 x 1
+##    ODOKUMA2
+##       &lt;dbl&gt;
+##  1     418.
+##  2     473.
+##  3     414.
+##  4     429.
+##  5     570.
+##  6     416.
+##  7     422.
+##  8     552.
+##  9     534.
+## 10     470.
+## # ... with 6,880 more rows
+```
+
+---
+##  Matıksal operatorler ile secim
+
+- hariç tutmak amacıyla **-** operatorü kullanılabilir.
+
+
+```r
+select(PISA_OGR_2018,-contains("OKUMA"),-matches("02"))  %&gt;% head(5)
+```
+
+```
+## # A tibble: 5 x 602
+##     OKULID OGRENCIID OKUL_TUR    KITAPCIK    SINIF  DOGUMAY CINSIYET   ANNE_OKUL
+##      &lt;dbl&gt;     &lt;dbl&gt; &lt;chr+lbl&gt;   &lt;dbl+lb&gt; &lt;dbl+lb&gt; &lt;dbl+lb&gt; &lt;dbl+lb&gt;   &lt;dbl+lbl&gt;
+## 1 79200001  79200768 TUR0~ [Ana~ 20 [For~ 10 [SIN~ 10 [Oct~ 2 [Erke~ 3 [Ortaoku~
+## 2 79200001  79201064 TUR0~ [Ana~  5 [For~ 10 [SIN~  2 [Feb~ 2 [Erke~ 3 [Ortaoku~
+## 3 79200001  79201118 TUR0~ [Ana~ 16 [For~ 10 [SIN~  1 [Jan~ 1 [Kiz]  4 [İlkokul]
+## 4 79200001  79201275 TUR0~ [Ana~ 21 [For~  9 [SIN~  9 [Sep~ 2 [Erke~ 1 [Genel L~
+## 5 79200001  79201481 TUR0~ [Ana~  1 [For~  9 [SIN~  9 [Sep~ 2 [Erke~ 1 [Genel L~
+## # ... with 594 more variables: ANNE_LISANSUSTU &lt;dbl+lbl&gt;,
+## #   ANNE_LISANS &lt;dbl+lbl&gt;, ANNE_ONLISANS &lt;dbl+lbl&gt;, BABA_OKUL &lt;dbl+lbl&gt;,
+## #   BABA_LISANSUSTU &lt;dbl+lbl&gt;, BABA_LISANS &lt;dbl+lbl&gt;, BABA_ONLISANS &lt;dbl+lbl&gt;,
+## #   OLANAK_MASA &lt;dbl+lbl&gt;, OLANAK_ODA &lt;dbl+lbl&gt;, OLANAK_SESSIZYER &lt;dbl+lbl&gt;,
+## #   OLANAK_BILGISAYAR &lt;dbl+lbl&gt;, OLANAK_YAZILIM &lt;dbl+lbl&gt;,
+## #   OLANAK_INTERNET &lt;dbl+lbl&gt;, OLANAK_KLASIKKITAP &lt;dbl+lbl&gt;,
+## #   OLANAK_SIIRKITAP &lt;dbl+lbl&gt;, OLANAK_SANATESER &lt;dbl+lbl&gt;, ...
+```
+
+---
+## **rename()** fonksiyonu
+
+- **select()** fonksiyonu icinde değişken seçimi sırasında değişken adı değişimi yapılabilir.
+
+- Örnekte **ODOKUMA1** degişkeninin adını **okumapuan** olarak değiştirip seçebilirsiniz.
+
+
+```r
+PISA_OGR_2018 %&gt;%   
+select(OGRENCIID,OKUL_TUR,CINSIYET,SES,okumapuan = ODOKUMA1) %&gt;% 
+head(2)
+```
+
+```
+## # A tibble: 2 x 5
+##   OGRENCIID OKUL_TUR                      CINSIYET   SES okumapuan
+##       &lt;dbl&gt; &lt;chr+lbl&gt;                    &lt;dbl+lbl&gt; &lt;dbl&gt;     &lt;dbl&gt;
+## 1  79200768 TUR0112 [Anadolu Lisesi - E] 2 [Erkek] -2.45      376.
+## 2  79201064 TUR0112 [Anadolu Lisesi - E] 2 [Erkek] -2.10      512.
+```
+
+---
+## **rename()** fonksiyonu
+
+- Örnekte ise **ODOKUMA1** degişkeninin adı okumapuan olarak **rename()** fonksiyonu ile de değiştirilebilir.
+
+
+```r
+PISA_OGR_2018 %&gt;%   
+select(OGRENCIID,OKUL_TUR,CINSIYET,SES,ODOKUMA1) %&gt;% 
+rename(okumapuan=ODOKUMA1)%&gt;% 
+head(2)
+```
+
+```
+## # A tibble: 2 x 5
+##   OGRENCIID OKUL_TUR                      CINSIYET   SES okumapuan
+##       &lt;dbl&gt; &lt;chr+lbl&gt;                    &lt;dbl+lbl&gt; &lt;dbl&gt;     &lt;dbl&gt;
+## 1  79200768 TUR0112 [Anadolu Lisesi - E] 2 [Erkek] -2.45      376.
+## 2  79201064 TUR0112 [Anadolu Lisesi - E] 2 [Erkek] -2.10      512.
+```
+
+---
+## mutate fonksiyonu
+
+- **mutate()** fonksiyonu ile veri setine yeni değişken ekleyebilirsiniz.
+
+- **transmutate()** fonksiyonu ile veri setine yeni değişken eklenirken, eski değişken/ler veri setiden çıkarılır.
+
+- Okumadan zevk alma maddelerinden bir veri seti oluşturup, bu veri setine toplam puan ekleme
+
+
+```r
+zevk  &lt;- select(PISA_OGR_2018, starts_with("ST097")) 
+zevk  &lt;- expss::drop_var_labs(zevk)
+zevk %&gt;% 
+mutate(toplam =ST097Q01TA+ST097Q02TA+ST097Q03TA+ST097Q04TA+ ST097Q05TA) %&gt;% head(2)
+```
+
+```
+## # A tibble: 2 x 6
+##   ST097Q01TA ST097Q02TA ST097Q03TA ST097Q04TA ST097Q05TA toplam
+##        &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;  &lt;dbl&gt;
+## 1          1          2          1          1          1      6
+## 2          3          2          3          3          3     14
+```
+
+---
+## mutate() fonksiyonu
+
+- Değişken değerleri bir önceki örnekteki gibi tek tek **+** ile toplanacağı gibi **rowSums()** fonkşsyonu ile de aşağıdaki gibi toplanabilir 
+
+```r
+zevk %&gt;% 
+mutate(toplam=rowSums(select(., ST097Q01TA:ST097Q05TA))) %&gt;% 
+head(2)
+```
+
+```
+## # A tibble: 2 x 6
+##   ST097Q01TA ST097Q02TA ST097Q03TA ST097Q04TA ST097Q05TA toplam
+##        &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;  &lt;dbl&gt;
+## 1          1          2          1          1          1      6
+## 2          3          2          3          3          3     14
+```
+
+---
+## mutate() fonksiyonu
+
+- Yeni eklenecek yeri `.before` ya da `.after` argumanları ile düzenleyebilirsiniz.
+
+
+```r
+zevk %&gt;% 
+mutate(toplam=rowSums(select(., ST097Q01TA:ST097Q05TA)),.before= ST097Q01TA)%&gt;% head(2)
+```
+
+```
+## # A tibble: 2 x 6
+##   toplam ST097Q01TA ST097Q02TA ST097Q03TA ST097Q04TA ST097Q05TA
+##    &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;
+## 1      6          1          2          1          1          1
+## 2     14          3          2          3          3          3
+```
+
+---
+## transmute() fonksiyonu
+
+- **transmute()** fonksiyonu kullanılarak yeni değişken oluşturulduğunda, işlemde kullanılan değişkenler veri setinden çıkarılır.
+
+
+```r
+zevk %&gt;% 
+transmute(toplam=rowSums(select(., ST097Q01TA:ST097Q05TA))) %&gt;% 
+head(2)
+```
+
+```
+## # A tibble: 2 x 1
+##   toplam
+##    &lt;dbl&gt;
+## 1      6
+## 2     14
+```
+
+---
+## mutate() fonksiyonu
+
+- Fonksiyonda üretilen ilk değişken kullanılarak da yeni değişken üretilebilir.
+ 
+- Ilk olarak ozyeterliği ölçen maddelerden yeni bir veri oluşturulmuş, daha sonra bu puanların önce toplam puanları daha sonra toplam puanların kareleri alınmıştır.
+
+
+```r
+ozyeterlik &lt;- PISA_OGR_2018 %&gt;% 
+  expss::drop_var_labs() %&gt;% 
+  select(ST196Q02HA:ST196Q07HA) 
+
+ozyeterlik%&gt;% 
+  rowwise() %&gt;%
+  mutate(toplam = sum(across()))%&gt;% 
+  mutate(toplam_kare=toplam*toplam) %&gt;% head(2)
+```
+
+```
+## # A tibble: 2 x 8
+## # Rowwise: 
+##   ST196Q02HA ST196Q03HA ST196Q04HA ST196Q05HA ST196Q06HA ST196Q07HA toplam
+##        &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;  &lt;dbl&gt;
+## 1          3          3          4          4          3          4     21
+## 2          3          3          4          4          3          2     19
+## # ... with 1 more variable: toplam_kare &lt;dbl&gt;
+```
+
+
+---
+## ifelse()
+
+- **ifelse()** programlama dillerinde sıklıkla kullanılan koşullu önermelerden biridir.
+
+
+```r
+ifelse(test = x==y, evet = ilkdeger , hayır = ikincideger)
+```
+
+
+```r
+x &lt;- c(-2,1,-1,-3,3)
+ifelse(x&lt;0,"Negatif", "Pozitif")
+```
+
+```
+## [1] "Negatif" "Pozitif" "Negatif" "Negatif" "Pozitif"
+```
+
+---
+## ifelse()
+
+- Uygulama 7.,8.,9.,10.,11. ve 12. sınıf öğrencileri katılmaktadır.
+
+
+```r
+table(PISA_OGR_2018$SINIF)
+```
+
+```
+## 
+##    7    8    9   10   11   12 
+##    3   19 1295 5360  207    6
+```
+
+- **SINIF** değişkenini kullanarak ortaokul ve lise olmak üzere iki düzeyli **OKUL** adlı bir değişken oluşturalım.
+
+---
+## ifelse()
+
+
+```r
+PISA_OGR_2018 %&gt;%
+  select(1:5) %&gt;% 
+  mutate(okul = ifelse(SINIF == 7 | SINIF == 8, 
+                       "Ortaokul", "Lise")) %&gt;%
+    head(3)
+```
+
+```
+## # A tibble: 3 x 6
+##     OKULID OGRENCIID OKUL_TUR                         KITAPCIK       SINIF okul 
+##      &lt;dbl&gt;     &lt;dbl&gt; &lt;chr+lbl&gt;                       &lt;dbl+lbl&gt;   &lt;dbl+lbl&gt; &lt;chr&gt;
+## 1 79200001  79200768 TUR0112 [Anadolu Lisesi - E] 20 [Form 20] 10 [SINIF ~ Lise 
+## 2 79200001  79201064 TUR0112 [Anadolu Lisesi - E]  5 [Form 5]  10 [SINIF ~ Lise 
+## 3 79200001  79201118 TUR0112 [Anadolu Lisesi - E] 16 [Form 16] 10 [SINIF ~ Lise
+```
+
+---
+## case_when()
+
+- **case_when()** fonksiyonu çoklu **ifelse() ** kullanımı ile benzer işlevi sağlar.
+
+- **case_when()** birden fazla koşula dayalı karşılaştırmalarda yeni bir değişken oluşturmak amacıyla kullanılır. 
+
+- Sosyoekomik düzeye ilişikin betimsel istatistikler
+
+```r
+summary(PISA_OGR_2018$SES)
+```
+
+```
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+## -4.7546 -2.0633 -1.3002 -1.1712 -0.3228  2.7617      35
+```
+
+
+---
+## casewhen()
+
+- SES değişkeninin kategorik hale getirilmesi
+
+
+```r
+v1 &lt;- PISA_OGR_2018 %&gt;% 
+  mutate(SES_kategorik = 
+    case_when(
+      SES &lt;=  -2 ~ "dusuk",
+      SES &gt; -2 &amp; SES &lt;  0 ~ "orta",
+      SES &gt;=0 ~ "yuksek" )) %&gt;% 
+      select(SES,SES_kategorik)
+```
+
+
+---
+## casewhen()
+
+- Olusturulan yeni SES_kategorik degişkeninin veri setinde nasıl dağıldığını inceleme
+
+
+
+```r
+v1 %&gt;% group_by(SES_kategorik) %&gt;% summarize(f=n())
+```
+
+```
+## # A tibble: 4 x 2
+##   SES_kategorik     f
+##   &lt;chr&gt;         &lt;int&gt;
+## 1 dusuk          1856
+## 2 orta           3676
+## 3 yuksek         1323
+## 4 &lt;NA&gt;             35
+```
+
+
+---
+
+.hand-large[teşekkürler !]
+
+<<<<<<< HEAD
+
+[Siz de yapın](https://learnr-examples.shinyapps.io/ex-data-filter/#section-welcome&gt;)
+
+[Siz de yapın](https://learnr-examples.shinyapps.io/ex-data-summarise/)
+=======
+>>>>>>> a770ffe07f1fa6836f04e8bda7ac33163d935467
+--
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "solarized-light",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9",
+"slideNumberFormat": "<div class=\"progress-bar-container\">\n  <div class=\"progress-bar\" style=\"width: calc(%current% / %total% * 100%);\">\n  </div>\n</div>"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

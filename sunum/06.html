@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>💪 4005 R ile Büyük Veri Analitiği</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="    👩‍🏫 Dr. Kübra ATALAY KABASAKAL   Hacettepe Üniversitesi" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/font-awesome/css/all.css" rel="stylesheet" />
+    <link href="libs/font-awesome/css/v4-shims.css" rel="stylesheet" />
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+    <link rel="stylesheet" href="slides-style.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# 💪 4005 R ile Büyük Veri Analitiği
+<<<<<<< HEAD
+## <br> 📉 Veri Manipulasyonu_06
+=======
+## <br> 📊 Veri Manipulasyonu_06
+>>>>>>> a770ffe07f1fa6836f04e8bda7ac33163d935467
+### <br> <br> 👩‍🏫 Dr. Kübra ATALAY KABASAKAL <br> Hacettepe Üniversitesi
+### 20/12/2021 <br> <br> <br> <br>📧 <a href="mailto:katalay@hacettepe.edu.tr" class="email">katalay@hacettepe.edu.tr</a>
+
+---
+
+
+
+
+
+layout: true
+  
+&lt;div class="my-footer"&gt;
+&lt;span&gt;
+ - Dr. Kübra Atalay Kabasakal
+&lt;/span&gt;
+&lt;/div&gt; 
+
+---
+
+
+
+
+
+
+
+---
+## Veriyi İnceleme
+
+Oncelikle **select()** fonksiyonunu ile kullanmak üzere bir veri seti oluşturalim.
+
+
+```r
+miniPISA &lt;-  PISA_OGR_2018 %&gt;%   select(OGRENCIID,
+                           OKUL_TUR,
+                           CINSIYET,SES,Gocmenlik,
+                           Anne_Egitim,Baba_Egitim,
+                           OKUMA_ZEVK,OK_YETERLIK,ODOKUMA1)  %&gt;%
+                           expss::drop_var_labs()
+```
+
+---
+## Veriyi İnceleme
+
+`"miniPISA"` nesnesinden sosyoekonomik düzeyi 3'un üstünde olan gözlemlerin seçilmesi
+
+
+
+---
+## Veriyi İnceleme
+
+`"miniPISA"` nesnesinden sosyoekonomik düzeyi 2'in üstünde olan gözlemlerin seçilmesi
+
+
+
+---
+## Veriyi İnceleme
+
+`"miniPISA"` nesnesinden anne eğitim düzeyi, baba eğitim düzeyinden yüksek olanların secilmesi
+
+
+
+---
+## Veriyi İnceleme
+
+`"miniPISA"` nesnesinden anne eğitim düzeyi, baba eğitim düzeyinden yüksek olanların ve OK_YETERLIK değişkeninde eksik verisi olmayanların seçilmesi
+
+- eksik veri varlığı **is.na()** fonksiyonu ile incelenebilir.
+
+
+```r
+x &lt;- c(3,5,6,7,8,NA)
+is.na(x)
+```
+
+```
+## [1] FALSE FALSE FALSE FALSE FALSE  TRUE
+```
+
+
+
+
+---
+## Veriyi İnceleme
+
+`"miniPISA"` nesnesinden anne eğitim düzeyi, baba eğitim düzeyinden yüksek olanların ve OK_YETERLIK değişkeninde eksik verisi olmayanların ve sosyoekonomik düzeyi ortalamanın üstünde olanların seçilmesi
+
+
+
+---
+## Veriyi İnceleme
+
+`"miniPISA"` nesnesindeki gözlemlerin SES puanlarına göre büyükten küçüğe sıralanması
+
+
+
+
+
+---
+## Veriyi İnceleme
+
+`"miniPISA"` nesnesindeki gözlemlerin anne eğitim düzeyi ve baba eğitim düzeyi toplamına gore  büyükten küçüğe sıralanması
+
+
+```r
+arrange(miniPISA,Anne_Egitim + Baba_Egitim)
+```
+
+```
+## # A tibble: 6,890 x 10
+##    OGRENCIID OKUL_TUR CINSIYET   SES Gocmenlik Anne_Egitim Baba_Egitim
+##        &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;
+##  1  79203057 TUR0231         2 -2.71         1           0           0
+##  2  79201246 TUR0114         1 -3.31         1           0           0
+##  3  79206034 TUR0114         2 -3.21         1           0           0
+##  4  79206038 TUR0114         2 -2.76         1           0           0
+##  5  79203957 TUR0231         1 -3.14         1           0           0
+##  6  79205430 TUR0231         1 -2.52         1           0           0
+##  7  79200013 TUR0111         2 -2.86         1           0           0
+##  8  79201946 TUR0230         1 -3.25         1           0           0
+##  9  79200998 TUR0115         1 -3.33         1           0           0
+## 10  79201589 TUR0115         1 -3.22         1           0           0
+## # ... with 6,880 more rows, and 3 more variables: OKUMA_ZEVK &lt;dbl&gt;,
+## #   OK_YETERLIK &lt;dbl&gt;, ODOKUMA1 &lt;dbl&gt;
+```
+
+
+---
+## Veriyi İnceleme
+
+`"miniPISA"` nesnesindeki gözlemlerin "OK_YETERLIK" puanlarina iliskin ozet istatistiklerin elde edilmesi
+
+
+
+---
+## Veriyi İnceleme
+
+`"miniPISA"` nesnesindeki gözlemlerin eksik gözlemler çikarildiktan sonra sayısal sütunlara ilişkin ozet istatistikler
+
+
+
+ayni islemi `is.na()` fonksiyonunu kullanarak siz de deneyiniz.
+
+---
+## Veriyi İnceleme
+
+`"miniPISA"` nesnesinde anne ve baba egitim düzeyin lise ve uzeri olan ve sosyo ekonomik düzeyi ortalamanin uzerinde olan öğrencilerin OK_YETERLIK puanlarina iliskin ozet istatistikler
+
+
+
+---
+## Veriyi İnceleme
+
+`"miniPISA"` nesnesinde anne egitim düzeyinde eksik verisi olmayan öğrencilerin anne egitim düzeyine gore OK_YETERLIK puanlarinin buyukten kucuge siralanmasi
+
+
+
+---
+## Veriyi İnceleme
+
+`"miniPISA"` nesnesinde 2. nesil gocmen öğrencilerin cinsiyete gore basari puanlarinin ortalamasinin hesaplanmasi
+
+
+
+## Baska Ornekler Icin
+
+
+[tuev paket] (https://rpubs.com/tuevpaket/775269)
+
+---
+
+.hand-large[teşekkürler !]
+
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "solarized-light",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9",
+"slideNumberFormat": "<div class=\"progress-bar-container\">\n  <div class=\"progress-bar\" style=\"width: calc(%current% / %total% * 100%);\">\n  </div>\n</div>"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>💪 4005 R ile Büyük Veri Analitiği</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="    👩‍🏫 Dr. Kübra ATALAY KABASAKAL   Hacettepe Üniversitesi" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/font-awesome/css/all.css" rel="stylesheet" />
+    <link href="libs/font-awesome/css/v4-shims.css" rel="stylesheet" />
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+    <link rel="stylesheet" href="slides-style.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# 💪 4005 R ile Büyük Veri Analitiği
+<<<<<<< HEAD
+## <br> 📊 Veri Manipulasyonu_02
+=======
+## <br> 📉 Veri Manipulasyonu_02
+>>>>>>> a770ffe07f1fa6836f04e8bda7ac33163d935467
+### <br> <br> 👩‍🏫 Dr. Kübra ATALAY KABASAKAL <br> Hacettepe Üniversitesi
+### 20/12/2021 <br> <br> <br> <br>📧 <a href="mailto:katalay@hacettepe.edu.tr" class="email">katalay@hacettepe.edu.tr</a>
+
+---
+
+
+
+
+
+layout: true
+  
+&lt;div class="my-footer"&gt;
+&lt;span&gt;
+ - Dr. Kübra Atalay Kabasakal
+&lt;/span&gt;
+&lt;/div&gt; 
+
+---
+
+
+
+
+
+
+# Veriyi üst düzeyde toplama .huge[📊]
+
+.hand[İçerik...]
+- **count()** fonksiyonu
+--
+
+- **grup_by()** ve **summarize()**
+
+--
+
+- **summarize_all()** ve **summarize_if()** ve **summarize_at()**
+
+--
+
+- **top_n()**
+
+
+---
+
+## count() fonksiyonu
+
+- **count()** fonkisyonu frekans tablosu oluşturmak için kullanılabilir.
+
+- **count()** fonksiyonunun pipe ile kullanımı
+
+```r
+veri_seti %&gt;% count(degisken_adı)
+```
+
+---
+## count() fonksiyonu
+
+
+```r
+library(dplyr)
+data(PISA_STU_2018)
+PISA_STU_2018 %&gt;% count()
+```
+
+```
+## # A tibble: 1 x 1
+##       n
+##   &lt;int&gt;
+## 1  6890
+```
+
+- Cinsiyete göre dağılım
+.huge[👦] .huge[👧]
+
+```r
+PISA_STU_2018 %&gt;% count(ST004D01T)
+```
+
+```
+## # A tibble: 2 x 2
+##    ST004D01T     n
+##    &lt;dbl+lbl&gt; &lt;int&gt;
+## 1 1 [Female]  3396
+## 2 2 [Male]    3494
+```
+
+---
+## count() fonksiyonu
+- Cinsiyete göre dağılım - **sort** argümanı ile sıralanabilir.
+.huge[👦] .huge[👧]
+
+
+```r
+PISA_STU_2018 %&gt;% count(ST004D01T,sort=TRUE)
+```
+
+```
+## # A tibble: 2 x 2
+##    ST004D01T     n
+##    &lt;dbl+lbl&gt; &lt;int&gt;
+## 1 2 [Male]    3494
+## 2 1 [Female]  3396
+```
+
+---
+## count() fonksiyonu
+
+- PISA_OGR_2018 öğrenci verisindeki değişken adlarının türkçeleştirilmiş halidir.
+- Bu veri setini kullanarak öğrencilerin göçmenlik durumları ve cinsiyetlere göre dağılımını inceleyelim.
+
+
+```r
+PISA_OGR_2018 %&gt;% count(CINSIYET,Gocmenlik)
+```
+
+```
+## # A tibble: 8 x 3
+##    CINSIYET          Gocmenlik     n
+##   &lt;dbl+lbl&gt;          &lt;dbl+lbl&gt; &lt;int&gt;
+## 1 1 [Kiz]    1 [Yerli]          3306
+## 2 1 [Kiz]    2 [İkinci Nesil]     17
+## 3 1 [Kiz]    3 [Birinci Nesil]    10
+## 4 1 [Kiz]   NA                    63
+## 5 2 [Erkek]  1 [Yerli]          3357
+## 6 2 [Erkek]  2 [İkinci Nesil]     20
+## 7 2 [Erkek]  3 [Birinci Nesil]     7
+## 8 2 [Erkek] NA                   110
+```
+
+???
+siz de bu işlemi sıralandırılmış olarak yapınız.
+
+---
+## count() fonksiyonu
+
+
+```r
+PISA_OGR_2018 %&gt;% count(SINIF, sort=TRUE)
+```
+
+```
+## # A tibble: 6 x 2
+##           SINIF     n
+##       &lt;dbl+lbl&gt; &lt;int&gt;
+## 1 10 [SINIF 10]  5360
+## 2  9 [SINIF 9]   1295
+## 3 11 [SINIF 11]   207
+## 4  8 [SINIF 8]     19
+## 5 12 [SINIF 12]     6
+## 6  7 [SINIF 7]      3
+```
+
+???
+siz de  SINIF ve CINSIYET e göre dağılımı bulunuz?
+
+
+---
+## count() fonksiyonu
+
+- Gruplandırılmış veride bellirli bir değişkene ilişkin toplam almak istiyorsanız **count()** fonksiyonunun **wt()** argümanını kullanabilirsiniz.
+
+
+```r
+PISA_OGR_2018 %&gt;% count(OKUL_TUR, wt=SES, sort=TRUE)
+```
+
+```
+## # A tibble: 39 x 2
+##    OKUL_TUR                                      n
+##    &lt;chr+lbl&gt;                                 &lt;dbl&gt;
+##  1 TUR0318 [Anadolu Imam Hatip Lisesi - A]   8.71 
+##  2 TUR0108 [Anadolu Lisesi - A]             -0.522
+##  3 TUR0305 [Sosyal Bilimler Lisesi - A]    -15.9  
+##  4 TUR0302 [Fen Lisesi - A]                -16.4  
+##  5 TUR0303 [Fen Lisesi - B]                -34.0  
+##  6 TUR0304 [Fen Lisesi - C]                -34.2  
+##  7 TUR0326 [Anadolu Guzel Sanatlar Lisesi] -38.2  
+##  8 TUR0301 [Ortaokul]                      -49.4  
+##  9 TUR0306 [Sosyal Bilimler Lisesi - B]    -65.7  
+## 10 TUR0307 [Sosyal Bilimler Lisesi - C]    -77.0  
+## # ... with 29 more rows
+```
+
+
+---
+## summarize() fonksiyonları
+
+- **summarize()** seçilen sütunlar için her satırı kullanarak istatistikler hesaplar.
+
+- kaç satır olduğu
+
+- ortalamanın ne olduğu
+
+- toplamın ne olduğu
+
+- minumum ve maksimum değerlerin ne olduğu gibi..
+
+
+---
+## summarize() fonksiyonları
+
+- Tek satırlık veri setini özetleyerek yeni bir veri seti oluşturan fonksiyondur.
+
+  - **min(x)** x vektöründeki minumum değer
+  - **max(x)** x vektöründeki maksimum değer
+  - **mean(x)** x vektöründeki ortalama değer
+  - **median(x)** x vektöründeki ortanca değer
+  - **quantile(x, p)** x vektöründeki q. yuzdelik
+  - **sd(x)** x vektöründeki standart sapma
+  - **var(x)** x vektöründeki varyans
+  - **diff(range(x))** x vektöründeki değiskenlik
+  - **first(x)** x vektöründeki ilk eleman
+  - **last(x)** x vektöründeki son eleman
+  - **nth(x, n)** x vektöründeki n. eleman
+  - **n()** x vektöründeki eleman sayısı
+  - **n_distinct(x)** x vektöründeki farklı değerlerin sayısı
+  
+---
+.pull-left[
+## summarize()
+- PISA veri setindeki başarısı için 
+hesaplanan 10 olası puan değerinden 
+(plausible value) ilki kullanılmıştır. 
+
+
+```r
+PISA_OGR_2018 %&gt;% 
+summarise(mean(ODOKUMA1))
+```
+
+```
+## # A tibble: 1 x 1
+##   `mean(ODOKUMA1)`
+##              &lt;dbl&gt;
+## 1             464.
+```
+]
+--
+.pull-right[
+## isimlendirme
+
+- **summarise()** fonksiyonu içinde isimlendirme yapmazsanız, oluşan veri setinde isimlendirme fonksiyon adı/ları olacaktır.
+
+- isimlendirilmiş çıktı
+
+
+```r
+PISA_OGR_2018 %&gt;%
+  summarise(ortalama=mean(ODOKUMA1))
+```
+
+```
+## # A tibble: 1 x 1
+##   ortalama
+##      &lt;dbl&gt;
+## 1     464.
+```
+]
+---
+## summarize() 
+
+- Özet bilgiler elde etmek için birden fazla özetleyici fonksiyon kullanabilirsiniz.
+
+
+```r
+PISA_OGR_2018 %&gt;%
+  summarise(n = n(),
+            ortalama=mean(ODOKUMA1),
+            sd=sd(ODOKUMA1),
+            min=min(ODOKUMA1),
+            max=max(ODOKUMA1))
+```
+
+```
+## # A tibble: 1 x 5
+##       n ortalama    sd   min   max
+##   &lt;int&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1  6890     464.  87.8  176.  772.
+```
+
+---
+## summarize() and group_by()
+
+- Özet bilgileri veri setinde yer alan alt gruplar için ise ayrı ayrı **group_by()** fonksiyonu ile hesaplayabilirsiniz.
+
+- **group_by()** dan sonra kullanılan fonksiyonlar her grup için hesaplanır. Fonksiyonu içinde sürekli değişken **kullanılmaz.**
+
+- Cinsiyete göre ODOKUMA1 puanlarına ilişkin istatistikler
+
+```r
+PISA_OGR_2018 %&gt;%
+  group_by(CINSIYET) %&gt;%
+  summarise(n = n(),ortalama=mean(ODOKUMA1),sd=sd(ODOKUMA1),min=min(ODOKUMA1),max=max(ODOKUMA1))
+```
+
+```
+## # A tibble: 2 x 6
+##    CINSIYET     n ortalama    sd   min   max
+##   &lt;dbl+lbl&gt; &lt;int&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 1 [Kiz]    3396     478.  83.7  236.  772.
+## 2 2 [Erkek]  3494     451.  89.6  176.  747.
+```
+
+???
+siz de bu işlemi göçmenlik statüsüne göre  yapınız.
+
+---
+## summarize() and group_by()
+
+- Özet bilgileri veri setinde yer alan birden fazla kategorik değişken içinde hesaplayabilirsiniz.
+
+- Öğrencilerin cinsiyet ve sınıf düzeylerine göre elde edilen betimsel istatistikleri ortalamaya göre sıralandırılmıştır.
+
+
+```r
+betimsel  &lt;- PISA_OGR_2018 %&gt;%
+  group_by(CINSIYET,SINIF) %&gt;%
+  summarise(n = n(),ortalama=mean(ODOKUMA1),sd=sd(ODOKUMA1)) %&gt;%        arrange(desc(ortalama)) 
+
+betimsel
+```
+
+```
+## # A tibble: 12 x 5
+## # Groups:   CINSIYET [2]
+##     CINSIYET         SINIF     n ortalama    sd
+##    &lt;dbl+lbl&gt;     &lt;dbl+lbl&gt; &lt;int&gt;    &lt;dbl&gt; &lt;dbl&gt;
+##  1 1 [Kiz]   10 [SINIF 10]  2707     482.  79.9
+##  2 1 [Kiz]   11 [SINIF 11]   124     473.  85.0
+##  3 1 [Kiz]    9 [SINIF 9]    548     462.  96.9
+##  4 2 [Erkek] 10 [SINIF 10]  2653     459.  85.0
+##  5 2 [Erkek] 11 [SINIF 11]    83     448.  87.9
+##  6 2 [Erkek]  9 [SINIF 9]    747     422.  98.7
+##  7 1 [Kiz]   12 [SINIF 12]     5     422.  96.6
+##  8 2 [Erkek]  8 [SINIF 8]      8     363.  82.8
+##  9 1 [Kiz]    8 [SINIF 8]     11     356.  62.5
+## 10 1 [Kiz]    7 [SINIF 7]      1     344.  NA  
+## 11 2 [Erkek]  7 [SINIF 7]      2     330.  62.1
+## 12 2 [Erkek] 12 [SINIF 12]     1     322.  NA
+```
+
+---
+## summarize() and group_by()
+
+- **group_by()** fonksiyonu ile elde ettiğiniz çıktılarda aşağıdaki gibi 
+gruplandırılmış veri **Groups**  çıktısı ile alınır.
+
+
+```r
+# A tibble: 12 x 5
+# Groups:   CINSIYET [2]
+```
+
+---
+## summarize() and group_by()
+
+- Gruplandırılmış elde edilen veri setlerinde tekrar işlem yapmak istiyorsanız bunu **ungroup()** fonksiyonu ile yapabilirsiniz.
+
+
+```r
+PISA_OGR_2018 %&gt;%
+  group_by(CINSIYET,SINIF) %&gt;%
+  summarise(n = n(),ortalama=mean(ODOKUMA1),sd=sd(ODOKUMA1)) %&gt;%        arrange(desc(ortalama)) %&gt;% 
+  ungroup()
+```
+
+```
+## # A tibble: 12 x 5
+##     CINSIYET         SINIF     n ortalama    sd
+##    &lt;dbl+lbl&gt;     &lt;dbl+lbl&gt; &lt;int&gt;    &lt;dbl&gt; &lt;dbl&gt;
+##  1 1 [Kiz]   10 [SINIF 10]  2707     482.  79.9
+##  2 1 [Kiz]   11 [SINIF 11]   124     473.  85.0
+##  3 1 [Kiz]    9 [SINIF 9]    548     462.  96.9
+##  4 2 [Erkek] 10 [SINIF 10]  2653     459.  85.0
+##  5 2 [Erkek] 11 [SINIF 11]    83     448.  87.9
+##  6 2 [Erkek]  9 [SINIF 9]    747     422.  98.7
+##  7 1 [Kiz]   12 [SINIF 12]     5     422.  96.6
+##  8 2 [Erkek]  8 [SINIF 8]      8     363.  82.8
+##  9 1 [Kiz]    8 [SINIF 8]     11     356.  62.5
+## 10 1 [Kiz]    7 [SINIF 7]      1     344.  NA  
+## 11 2 [Erkek]  7 [SINIF 7]      2     330.  62.1
+## 12 2 [Erkek] 12 [SINIF 12]     1     322.  NA
+```
+
+---
+## summarize_at()
+
+- dplyr paket fonksiyonlarının **_at** **_if** **_all** uzantılı varyasyonları bulunmaktadır.
+
+- Sadece bir grup sütunun ortalamasını ve standart sapmasını hesaplamanız gerektiğinde **summarize_at()** fonksiyonunu kullanabilirsiniz.
+
+---
+## summarize_at()
+
+- **summarize_at()** fonksiyonu ile secilecek değişkenler **vars()**
+fonksiyonu içinde belirtilebilir. Bu işlem **select** işlemi yerine geçmektedir.
+
+- Hesaplama işlemlerini ise **list()** fonksiyonu içinde tanımlayabilirsiniz.
+
+
+```r
+# adlandırmaya dikkat edin!
+PISA_OGR_2018 %&gt;%
+    summarize_at(vars(ODOKUMA1, ODFEN1), list(~mean(.), ~sd(.)))
+```
+
+```
+## # A tibble: 1 x 4
+##   ODOKUMA1_mean ODFEN1_mean ODOKUMA1_sd ODFEN1_sd
+##           &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;
+## 1          464.        467.        87.8      83.1
+```
+
+---
+## summarize_all() ve summarize_if()
+
+- Elinizde tüm sütunları sayısal (numeric) olan bir veriseti olsun. Tum sütunların ortalamasını **summarize_all()** fonksiyonu ile hesaplayabilirsiniz.
+
+
+```r
+veriseti %&gt;% summarize_all(funs(mean, sd))
+```
+
+- Elinizdeki bir veri setinin sayısal (numeric) olan sütunlarının ortalamasını **summarize_if()** fonksiyonu ile hesaplayabilirsiniz.
+
+
+```r
+PISA_OGR_2018 %&gt;% summarize_if(is.numeric, funs(mean, sd))
+```
+
+```
+## # A tibble: 1 x 1,322
+##   OKULID_mean OGRENCIID_mean KITAPCIK_mean SINIF_mean DOGUMAY_mean CINSIYET_mean
+##         &lt;dbl&gt;          &lt;dbl&gt;         &lt;dbl&gt;      &lt;dbl&gt;        &lt;dbl&gt;         &lt;dbl&gt;
+## 1   79200096.      79203623.          14.0       9.84         6.15          1.51
+## # ... with 1,316 more variables: ANNE_OKUL_mean &lt;dbl&gt;,
+## #   ANNE_LISANSUSTU_mean &lt;dbl&gt;, ANNE_LISANS_mean &lt;dbl&gt;,
+## #   ANNE_ONLISANS_mean &lt;dbl&gt;, BABA_OKUL_mean &lt;dbl&gt;, BABA_LISANSUSTU_mean &lt;dbl&gt;,
+## #   BABA_LISANS_mean &lt;dbl&gt;, BABA_ONLISANS_mean &lt;dbl&gt;, OLANAK_MASA_mean &lt;dbl&gt;,
+## #   OLANAK_ODA_mean &lt;dbl&gt;, OLANAK_SESSIZYER_mean &lt;dbl&gt;,
+## #   OLANAK_BILGISAYAR_mean &lt;dbl&gt;, OLANAK_YAZILIM_mean &lt;dbl&gt;,
+## #   OLANAK_INTERNET_mean &lt;dbl&gt;, OLANAK_KLASIKKITAP_mean &lt;dbl&gt;, ...
+```
+
+---
+## top_n()
+
+- **top_n()** fonksiyonu ile istediğiniz bir değişkenin **en yüksek** ya da **en düşük** değerlerine  göre verisetinde seçim yapılabilir.
+
+
+```r
+df &lt;- data.frame(x = c(10, 4, 1, 6, 3, 1, 1))
+df %&gt;% top_n(2)
+```
+
+```
+## Selecting by x
+```
+
+```
+##    x
+## 1 10
+## 2  6
+```
+
+
+---
+## top_n()
+
+- Okuma puanı **en yuksek** olan beş kız ve beş erkek öğrencinin bilgileri
+
+```r
+PISA_OGR_2018 %&gt;%
+  select(CINSIYET,ODOKUMA1)%&gt;% 
+  arrange(desc(ODOKUMA1))%&gt;% 
+  group_by(CINSIYET) %&gt;% 
+  top_n(5,ODOKUMA1)
+```
+
+```
+## # A tibble: 10 x 2
+## # Groups:   CINSIYET [2]
+##     CINSIYET ODOKUMA1
+##    &lt;dbl+lbl&gt;    &lt;dbl&gt;
+##  1 1 [Kiz]       772.
+##  2 1 [Kiz]       748.
+##  3 2 [Erkek]     747.
+##  4 1 [Kiz]       743.
+##  5 2 [Erkek]     737.
+##  6 1 [Kiz]       719.
+##  7 1 [Kiz]       715.
+##  8 2 [Erkek]     714.
+##  9 2 [Erkek]     713.
+## 10 2 [Erkek]     707.
+```
+
+---
+
+
+---
+## top_n() &amp; - operatoru
+
+- Okuma puanı **en düşük** olan beş kız ve beş erkek öğrencinin bilgileri
+
+
+```r
+PISA_OGR_2018 %&gt;%
+  select(CINSIYET,ODOKUMA1)%&gt;% 
+  arrange(desc(ODOKUMA1))%&gt;% 
+  group_by(CINSIYET) %&gt;% 
+  top_n(-5,ODOKUMA1)
+```
+
+```
+## # A tibble: 10 x 2
+## # Groups:   CINSIYET [2]
+##     CINSIYET ODOKUMA1
+##    &lt;dbl+lbl&gt;    &lt;dbl&gt;
+##  1 1 [Kiz]       254.
+##  2 1 [Kiz]       253.
+##  3 1 [Kiz]       250.
+##  4 1 [Kiz]       242.
+##  5 1 [Kiz]       236.
+##  6 2 [Erkek]     220.
+##  7 2 [Erkek]     211.
+##  8 2 [Erkek]     199.
+##  9 2 [Erkek]     177.
+## 10 2 [Erkek]     176.
+```
+
+
+---
+## DataEditR paketi
+
+Bu paketi paketin [github sayfasindan](https://github.com/DillonHammill/DataEditR) inceleyelim.
+
+---
+
+
+.hand-large[teşekkürler !]
+
+--
+
+
+.large[🍵]  molası
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "solarized-light",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9",
+"slideNumberFormat": "<div class=\"progress-bar-container\">\n  <div class=\"progress-bar\" style=\"width: calc(%current% / %total% * 100%);\">\n  </div>\n</div>"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

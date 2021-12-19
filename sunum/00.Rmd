@@ -1,0 +1,67 @@
+---
+title: "Veri Duzenleme/Manipulasyon"
+author: "Dr. Kubra Atalay Kabasakal"
+date: "20/12/2021"
+output: html_document
+---
+  
+<!-- YAML bolumunde yer alan um bolumlerde degişiklik yapabilirsiniz. -->
+  
+## R kodu ve metin yazımı
+  
+Bu bolume notlar alabilirsiniz.
+
+## Nesne tanımlama
+
+```{r}
+x <-3
+x
+```
+
+## Hatalar
+
+```{r error=TRUE}
+# case sensitive
+X
+```
+
+## Veri Setleri
+
+Kodu çalıştırın ve global enviromentı kontrol edin.
+
+```{r echo = FALSE, message=FALSE}
+library(dplyr)
+data(band_members)
+data(starwars )
+```
+
+Bir kod bloğu ekleyip **band_members** ve  **starwars** veri yapılarını inceleyiniz.
+
+
+# Bugun kullanılacak olan R paketleri
+
+```{r message=FALSE, warning=FALSE}
+library(dplyr)
+library(gapminder)
+library(magrittr)
+library(tuev)
+library(EdSurvey)
+library(intsvy)
+library(foreign)
+library(RALSA)
+
+
+```
+
+# Başlamadan sizden ricam
+
+- Kodları slaytlardan kopyalayıp **yapıştırmayın.** 
+  
+- Yazarken sorunla karşılaşmak öğrenmenin önemli bir parçasıdır.  
+
+- Gün boyunca soru sormaktan çekinmeyin.  
+  
+- Herhangi birini ve ya soruyu **yargılamayın.**
+
+
+# Haydi başlayalım...

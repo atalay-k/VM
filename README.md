@@ -48,3 +48,10 @@ Bugunku ders notlarını bilgisayarınıza iki farklı yolla indirebilirsiniz.
 16:30 - 17:00 Günü özetleme ve değerlendirme
 <br>
 
+<<<<<<< HEAD
+=======
+
+
+
+
+>>>>>>> d93d2c0bb7472fb92b98cb52c12d8eccdcfc30ed

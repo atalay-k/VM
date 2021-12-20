@@ -17,11 +17,13 @@ Kubra Atalay Kabasakal, Hacettepe Üniversitesi, Eğitim Fakültesi, [Öğretim 
 Eğitimin tum materyallerine [bura](https://github.com/atalay-k/VM.git) 
 dan ulaşabilirsiniz. 
 
+Bugunku ders notlarını bilgisayarınıza iki farklı yolla indirebilirsiniz.
+
 ```{r}
 usethis::use_course("atalay-k/VM)
 ```
 
-Bugunku ders notlarını bilgisayarınıza iki farklı yolla indirebilirsiniz.
+
 [Rstudio cloud](https://rstudio.cloud/project/3381892)
 
 

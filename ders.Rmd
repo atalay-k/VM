@@ -1,0 +1,144 @@
+---
+title: "Egitim 1. Gun"
+author: "Kubra Atalay Kabasakal"
+date: "20 12 2021"
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Veri Manipulasyonu
+
+bu kısıma notlar alabilirsiniz.
+
+```{r}
+library(devtools)
+library(usethis)
+# use_course("atalay-k/VM")
+```
+
+```{r}
+# devtools::install_github("tuevpaket/tuev")
+
+install_github("tuevpaket/tuev")
+library(tuev)
+```
+
+
+
+```{r}
+data(PISA_COG_2018)
+data(PISA_STU_2018)
+data(PISA_SCH_2018)
+data(PISA_OGR_2018)
+```
+
+
+```{r}
+library(dplyr)
+library(magrittr)
+
+
+```
+
+select fonksiyonu kullanımı
+
+```{r}
+veri1 <- PISA_STU_2018 %>%  select(CNTSTUID,ST001D01T,ST004D01T,ESCS)
+
+arrange(veri1,ESCS)
+veri1 %>% arrange(ESCS)
+
+veri1 %>% arrange(desc(ESCS))
+
+```
+
+```{r}
+library(haven)
+PISA_STU_2018 %>% filter(MISCED==6)
+```
+
+```{r}
+PISA_STU_2018 %>% filter(MISCED==6 | FISCED==6)
+```
+
+
+```{r}
+PISA_STU_2018 %>% count(ST004D01T,sort=TRUE)
+```
+
+```{r}
+names(PISA_OGR_2018)
+```
+
+
+```{r}
+count(PISA_OGR_2018,Anne_Egitim)
+PISA_OGR_2018 %>% count(Anne_Egitim,sort=TRUE)
+```
+
+
+
+```{r}
+PISA_OGR_2018 %>% count(CINSIYET,Gocmenlik)
+```
+
+
+```{r}
+
+PISA_OGR_2018 %>% count(SINIF,sort=TRUE)
+```
+
+```{r}
+PISA_OGR_2018 %>% count(OKUL_TUR, wt=SES,sort=TRUE)
+```
+
+
+
+```{r}
+PISA_OGR_2018 %>% summarise(ort=mean(SES,na.rm=TRUE))
+```
+
+
+
+
+```{r}
+PISA_OGR_2018 %>% 
+  group_by(CINSIYET)  %>% 
+  summarise(n=n(), 
+            ort=mean(SES,na.rm=TRUE),
+     sd= sd(SES,na.rm=TRUE))
+```
+
+```{r}
+betimsel <- PISA_OGR_2018 %>% 
+  group_by(CINSIYET,OKUL_TUR) %>% 
+  summarise(n=n(), ort=mean(SES,na.rm=TRUE),
+     sd= sd(SES,na.rm=TRUE))  %>% arrange(desc(ort))
+
+betimsel %>% ungroup()
+```
+
+
+```{r}
+sonuc <- PISA_OGR_2018 %>%
+    summarize_at(vars(ODOKUMA1, ODFEN1), list(~mean(.), ~sd(.)))
+
+t(sonuc)
+```
+
+```{r}
+library(DataEditR)
+
+
+if(interactive()) {
+
+  data_edit(PISA_OGR_2018)
+}
+```
+
+

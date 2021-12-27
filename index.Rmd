@@ -129,6 +129,7 @@ Kubra Atalay Kabasakal, Hacettepe Üniversitesi, Eğitim Fakültesi, [Öğretim 
 Eğitimin tum materyallerine [bura](https://github.com/atalay-k/VM.git) 
 dan ulaşabilirsiniz.
 
+Eğitim materyallerine [Rstudio cloud](https://bit.ly/3HfQxO9) üzerinden de çalışabilirsiniz.
 
 
 ## Gün Planı

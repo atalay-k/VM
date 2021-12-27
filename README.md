@@ -23,10 +23,7 @@ Bugunku ders notlarını bilgisayarınıza iki farklı yolla indirebilirsiniz.
 usethis::use_course("atalay-k/VM)
 ```
 
-
-[Rstudio cloud](https://rstudio.cloud/project/3381892)
-
-[Rstudio cloud](https://rstudio.cloud/spaces/202848/project/3382868)
+[Rstudio cloud](https://bit.ly/3HfQxO9)
 
 
 

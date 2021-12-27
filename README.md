@@ -52,8 +52,4 @@ usethis::use_course("atalay-k/VM)
 16:30 - 17:00 Günü özetleme ve değerlendirme
 <br>
 
-<<<<<<< HEAD
 
-
-=======
->>>>>>> b3c9a12c19d2f2614acbb9fa89768bb57aff8cf1

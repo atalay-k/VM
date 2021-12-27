@@ -23,7 +23,7 @@ Bugunku ders notlarını bilgisayarınıza iki farklı yolla indirebilirsiniz.
 usethis::use_course("atalay-k/VM)
 ```
 
-[Rstudio cloud](https://bit.ly/3HfQxO9)
+Eğitim materyallerine [Rstudio cloud](https://bit.ly/3HfQxO9) üzerinden de çalışabilirsiniz.
 
 
 

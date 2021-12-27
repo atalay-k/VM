@@ -25,7 +25,7 @@ output:
 
 1. [dplyr paketi giris](sunum/01.html)
  
-   - dplyr paket tanıtımı
+   - dplyr paket tanıtım
    - Veri yapısını anlama
    - pipe **%>%** operatoru
    - **select()**, **filter()** ve **arrange()** fonksiyonlar <br>

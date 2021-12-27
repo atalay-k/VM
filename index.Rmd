@@ -87,8 +87,8 @@ output:
   - **TIMSS 2019** (Mullis, Martin, Foy, Kelly, & Fishbein; 2020) <br>  
 veri setleri kullanılacaktır. 
 
--- 
-- PISA 2018 Bu verilerin toplandığı ankterler
+ 
+PISA 2018 Bu verilerin toplandığı ankterler
 
    - [Ogrenci Anketi](PISA_anketler/Turkish (Turkey) For Student_Questionnaire_Booklet_2018.pdf)
    - [Okul Anketi](PISA_anketler/Turkish (Turkey) For School_Questionnaire_2018.pdf)

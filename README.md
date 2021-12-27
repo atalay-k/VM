@@ -23,7 +23,12 @@ Bugunku ders notlarını bilgisayarınıza iki farklı yolla indirebilirsiniz.
 usethis::use_course("atalay-k/VM)
 ```
 
+<<<<<<< HEAD
 [Rstudio cloud](https://rstudio.cloud/project/3381892)
+=======
+
+[Rstudio cloud](https://rstudio.cloud/spaces/202848/project/3382868)
+>>>>>>> b3c9a12c19d2f2614acbb9fa89768bb57aff8cf1
 
 
 
@@ -49,5 +54,8 @@ usethis::use_course("atalay-k/VM)
 16:30 - 17:00 Günü özetleme ve değerlendirme
 <br>
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> b3c9a12c19d2f2614acbb9fa89768bb57aff8cf1
